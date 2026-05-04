@@ -5,45 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✨世界兒童博物館奇幻地圖✨</title>
     <style>
-        /* 溫暖繪本風整體背景 (奶油燕麥色) */
+        /* CSS 變數定義，方便日夜模式切換 */
+        :root {
+            --bg-gradient: linear-gradient(180deg, #fbf7f0 0%, #eaddce 100%);
+            --text-main: #5c4d4a;
+            --text-sub: #8c7c75;
+            --title-color: #b87365;
+            --panel-bg: rgba(255, 253, 250, 0.95);
+            --border-color: #d9c5b2;
+            --item-bg: #fff;
+            --tag-bg: #f4e8e1;
+            --map-bg: #f6f0e4;
+            --btn-blue: #8ba3b5;
+            --btn-blue-hover: #a1b6c7;
+        }
+
+        /* 黑夜星空模式變數 */
+        body.dark-mode {
+            --bg-gradient: linear-gradient(180deg, #16213e 0%, #0f3460 100%);
+            --text-main: #eaddce;
+            --text-sub: #b1c5d4;
+            --title-color: #f4e8e1;
+            --panel-bg: rgba(22, 33, 62, 0.85);
+            --border-color: #536b88;
+            --item-bg: #1a2a47;
+            --tag-bg: #2a3f5f;
+            --map-bg: #0b132b;
+            --btn-blue: #e94560; /* 黑夜模式的按鈕改為溫暖星光紅 */
+            --btn-blue-hover: #ff6b81;
+        }
+
+        /* 整體背景 */
         body {
             font-family: 'Comic Sans MS', 'Nunito', 'Microsoft JhengHei', cursive, sans-serif;
-            background: linear-gradient(180deg, #fbf7f0 0%, #eaddce 100%);
-            color: #5c4d4a;
+            background: var(--bg-gradient);
+            color: var(--text-main);
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
-        /* 移除行動裝置點擊的高光與預設 focus */
-        button, a, select, .map-dot {
+        /* 移除行動裝置點擊的高光與預設 focus，避免殘留記憶 */
+        button, a, select, .map-dot, .theme-toggle {
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
 
-        /* 標題設計 (赤陶色) */
+        /* 頂部控制列 (包含日夜切換與印章進度) */
+        .top-bar {
+            width: 100%;
+            max-width: 1350px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .passport-status {
+            background: var(--panel-bg);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: var(--title-color);
+            border: 2px dashed var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .theme-toggle {
+            background: var(--panel-bg);
+            border: 2px solid var(--border-color);
+            font-size: 1.5em;
+            padding: 5px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
+
+        /* 標題設計 */
         h1 {
-            color: #b87365;
+            color: var(--title-color);
             font-size: 2.5em;
-            text-shadow: 2px 2px 0px #fff, 4px 4px 0px #ebd6ce;
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.3);
+            margin-top: 0;
             margin-bottom: 5px;
             letter-spacing: 2px;
             text-align: center;
+            transition: color 0.3s;
         }
 
         p.subtitle {
-            color: #8c7c75;
+            color: var(--text-sub);
             font-size: 1.1em;
             margin-top: 0;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-weight: bold;
             text-align: center;
         }
 
-        /* 主內容佈局：左側地圖與篩選，右側清單 */
+        /* 主內容佈局 */
         .main-container {
             display: flex;
             gap: 20px;
@@ -61,13 +127,13 @@
             width: 100%;
         }
 
-        /* 篩選器容器 (暖色系虛線) */
+        /* 篩選器容器 */
         .search-container {
-            background-color: rgba(255, 253, 250, 0.95);
+            background-color: var(--panel-bg);
             padding: 15px 25px;
             border-radius: 30px;
-            box-shadow: 0 5px 15px rgba(184, 115, 101, 0.15);
-            border: 4px dashed #d9c5b2;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 4px dashed var(--border-color);
             margin-bottom: 20px;
             display: flex;
             gap: 20px;
@@ -75,6 +141,7 @@
             justify-content: center;
             width: 100%;
             box-sizing: border-box;
+            transition: all 0.3s;
         }
 
         .search-group {
@@ -86,19 +153,19 @@
 
         label {
             font-size: 0.95em;
-            color: #b87365;
+            color: var(--title-color);
             font-weight: bold;
-            background: #fff;
+            background: var(--item-bg);
             padding: 2px 10px;
             border-radius: 10px;
         }
 
         select {
             padding: 10px 15px;
-            border: 3px solid #ebd6ce;
+            border: 3px solid var(--border-color);
             border-radius: 20px;
-            background-color: #fff;
-            color: #5c4d4a;
+            background-color: var(--item-bg);
+            color: var(--text-main);
             font-size: 1em;
             font-weight: bold;
             font-family: inherit;
@@ -107,60 +174,43 @@
             text-align: center;
             min-width: 200px;
             appearance: none;
-            /* 下拉箭頭改為赤陶色 */
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23b87365%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px top 50%;
-            background-size: 12px auto;
         }
 
-        select:hover, select:focus {
-            border-color: #d4a390;
-            box-shadow: 0 0 10px rgba(184, 115, 101, 0.2);
-        }
-
-        /* 地圖區域 (底色與地圖海洋色融合) */
+        /* 地圖區域 */
         .map-wrapper {
             position: relative;
             width: 100%;
-            background-color: #f6f0e4;
+            background-color: var(--map-bg);
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            border: 5px solid #fff;
+            border: 5px solid var(--item-bg);
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 400px;
+            transition: background-color 0.5s;
         }
 
-        .map-wrapper::before {
-            content: "🍄 請確認已將圖片存為 map.png 🍄";
+        /* 夜間模式的星星裝飾 */
+        body.dark-mode .map-wrapper::after {
+            content: "";
             position: absolute;
-            color: #d4a390;
-            font-size: 1em;
-            font-weight: bold;
-            z-index: 0;
-        }
-
-        .base-map {
-            width: 100%;
-            display: block;
-            position: relative;
-            z-index: 1;
-        }
-
-        .svg-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
+                              radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px);
+            background-size: 100px 100px, 60px 60px;
+            background-position: 0 0, 20px 20px;
+            opacity: 0.3;
             pointer-events: none;
         }
 
-        /* 會呼吸的魔法圓點 (暖黃色與赤陶邊框) */
+        .base-map { width: 100%; display: block; position: relative; z-index: 1; transition: filter 0.5s; }
+        body.dark-mode .base-map { filter: brightness(0.7) contrast(1.2); }
+
+        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+
+        /* 會呼吸的魔法圓點 */
         .map-dot {
             fill: rgba(235, 185, 95, 0.85);
             stroke: rgba(200, 115, 101, 0.9);
@@ -172,12 +222,18 @@
             display: none; 
         }
 
+        /* 黑夜模式的圓點變成發光的星星 */
+        body.dark-mode .map-dot {
+            fill: #ffeb3b;
+            stroke: #fff;
+            filter: drop-shadow(0 0 8px #ffeb3b);
+        }
+
         @keyframes breathe {
             0% { r: 1.0; stroke-width: 0.3; }
             100% { r: 1.5; stroke-width: 0.5; filter: drop-shadow(0 0 3px rgba(235, 185, 95, 0.8)); }
         }
 
-        /* 滑鼠懸停改為地圖上的灰藍色 */
         .map-dot:hover, .map-dot.active {
             fill: rgba(139, 163, 181, 0.95);
             stroke: #fff;
@@ -186,154 +242,108 @@
             animation: none;
             filter: drop-shadow(0 0 5px rgba(139, 163, 181, 0.8));
         }
+        body.dark-mode .map-dot.active { fill: #e94560; filter: drop-shadow(0 0 10px #e94560); }
 
-        /* 右側區域：動態清單 */
+        /* 右側區域 */
         .right-panel {
             flex: 1;
-            background-color: rgba(255, 253, 250, 0.95);
+            background-color: var(--panel-bg);
             padding: 25px;
             border-radius: 30px;
-            box-shadow: 0 10px 25px rgba(184, 115, 101, 0.15);
-            border: 4px dashed #d9c5b2;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 4px dashed var(--border-color);
             min-height: 500px;
             max-height: 750px;
             overflow-y: auto;
             position: sticky;
             top: 20px;
             min-width: 350px;
+            transition: all 0.3s;
         }
 
         .right-panel h2 {
-            color: #b87365;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #ebd6ce;
-            padding-bottom: 10px;
+            color: var(--title-color);
+            text-align: center; margin-top: 0; margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-color); padding-bottom: 10px;
         }
 
         .filter-status {
-            font-size: 1em;
-            color: #8c7c75;
-            text-align: center;
-            margin-bottom: 15px;
-            background: #f4ede6;
-            padding: 10px;
-            border-radius: 15px;
-            font-weight: bold;
+            font-size: 1em; color: var(--text-sub); text-align: center;
+            margin-bottom: 15px; background: var(--tag-bg); padding: 10px;
+            border-radius: 15px; font-weight: bold;
         }
 
-        /* 博物館列表樣式 */
-        .museum-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .museum-item {
-            margin-bottom: 20px;
-            background: #fff;
-            padding: 15px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-left: 6px solid #d4a390;
-            animation: fadeIn 0.4s ease-in;
+        /* 動作按鈕群 (任意門 & 重置) */
+        .action-buttons {
+            display: flex; gap: 10px; margin-bottom: 15px;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn-magic, .btn-reset {
+            flex: 1;
+            color: white; border: none; padding: 10px 10px;
+            border-radius: 15px; cursor: pointer; font-weight: bold;
+            transition: 0.2s; font-size: 1em;
         }
+        
+        .btn-magic {
+            background: #e5b25d; box-shadow: 0 3px 0 #c79a4e;
+        }
+        .btn-magic:hover { transform: translateY(2px); box-shadow: 0 1px 0 #c79a4e; }
+        
+        .btn-reset {
+            background: #d4a390; box-shadow: 0 3px 0 #b58876; display: none;
+        }
+        .btn-reset:hover { transform: translateY(2px); box-shadow: 0 1px 0 #b58876; }
+
+        /* 博物館列表樣式 */
+        .museum-list { list-style: none; padding: 0; margin: 0; }
+
+        .museum-item {
+            margin-bottom: 20px; background: var(--item-bg); padding: 15px;
+            border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--title-color); animation: fadeIn 0.4s ease-in;
+            position: relative;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 護照印章樣式 */
+        .stamp-badge {
+            position: absolute; right: 10px; top: 10px;
+            width: 45px; height: 45px; opacity: 0.8;
+            transform: rotate(-15deg); display: none; pointer-events: none;
+        }
+        .museum-item.visited .stamp-badge { display: block; animation: stampPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes stampPop { 0% { transform: scale(2) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(-15deg); opacity: 0.8; } }
 
         .cat-tag {
-            display: inline-block;
-            background: #e3ccaa;
-            color: #5c4d4a;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 0.75em;
-            font-weight: bold;
-            margin-bottom: 8px;
+            display: inline-block; background: #e3ccaa; color: #5c4d4a;
+            padding: 3px 8px; border-radius: 10px; font-size: 0.75em;
+            font-weight: bold; margin-bottom: 8px;
         }
 
-        .museum-item h3 {
-            margin: 0 0 8px 0;
-            color: #5c4d4a;
-            font-size: 1.2em;
-        }
-
-        .museum-item p {
-            margin: 0 0 8px 0;
-            color: #8c7c75;
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
+        .museum-item h3 { margin: 0 0 8px 0; color: var(--text-main); font-size: 1.15em; padding-right: 40px; }
+        .museum-item p { margin: 0 0 8px 0; color: var(--text-sub); font-size: 0.9em; line-height: 1.4; }
         .feature-tag {
-            display: inline-block;
-            background: #f4e8e1;
-            color: #b87365;
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 0.85em;
-            font-weight: bold;
-            margin-bottom: 12px;
+            display: inline-block; background: var(--tag-bg); color: var(--title-color);
+            padding: 5px 10px; border-radius: 12px; font-size: 0.85em;
+            font-weight: bold; margin-bottom: 12px;
         }
 
-        /* 莫蘭迪灰藍色按鈕 */
+        /* 連結按鈕 */
         .museum-link {
-            text-decoration: none;
-            color: #fff;
-            background-color: #8ba3b5;
-            font-weight: bold;
-            font-size: 0.95em;
-            display: block;
-            padding: 10px 15px;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.2s;
-            box-shadow: 0 4px 0px #708696;
+            text-decoration: none; color: #fff; background-color: var(--btn-blue);
+            font-weight: bold; font-size: 0.95em; display: block;
+            padding: 10px 15px; border-radius: 20px; text-align: center;
+            transition: all 0.2s; box-shadow: 0 4px 0px rgba(0,0,0,0.15);
         }
-
         .museum-link:hover {
-            background-color: #a1b6c7;
-            transform: translateY(2px);
-            box-shadow: 0 2px 0px #708696;
-            color: #fff;
+            background-color: var(--btn-blue-hover); transform: translateY(2px);
+            box-shadow: 0 2px 0px rgba(0,0,0,0.15); color: #fff;
         }
 
-        .empty-state {
-            text-align: center;
-            color: #d9c5b2;
-            margin-top: 50px;
-            font-size: 4em;
-        }
-        .empty-state p {
-            font-size: 0.25em;
-            color: #8c7c75;
-            margin-top: 10px;
-        }
-
-        /* 顯示全部按鈕 */
-        .btn-reset {
-            margin-top: 5px;
-            margin-bottom: 15px;
-            background: #d4a390;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 3px 0 #b58876;
-            transition: 0.2s;
-            display: none;
-            width: 100%;
-        }
-        .btn-reset:hover {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #b58876;
-        }
+        .empty-state { text-align: center; color: var(--border-color); margin-top: 50px; font-size: 4em; }
+        .empty-state p { font-size: 0.25em; color: var(--text-sub); margin-top: 10px; }
 
         @media (max-width: 900px) {
             .main-container { flex-direction: column; }
@@ -343,8 +353,13 @@
 </head>
 <body>
 
+    <div class="top-bar">
+        <div class="passport-status" id="passport-status">🏅 收集印章：0 / 50</div>
+        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme(); this.blur();">🌞</button>
+    </div>
+
     <h1>✨ 世界兒童博物館奇幻地圖 ✨</h1>
-    <p class="subtitle">選擇您想探索的分類，或是直接點擊地圖上的魔法圓點！</p>
+    <p class="subtitle">點擊任意門隨機出發，記得收集你的數位參觀印章唷！</p>
 
     <div class="main-container">
         <!-- 左側：篩選表單與地圖 -->
@@ -353,7 +368,7 @@
             <div class="search-container">
                 <div class="search-group">
                     <label>🎨 選擇博物館種類</label>
-                    <select id="category-select">
+                    <select id="category-select" onchange="this.blur();">
                         <option value="all">【所有分類】</option>
                         <option value="藝術與美感啟蒙">藝術與美感啟蒙</option>
                         <option value="恐龍、動物與自然科學史">恐龍、動物與自然科學史</option>
@@ -363,9 +378,8 @@
                 </div>
                 <div class="search-group">
                     <label>🌍 選擇國家</label>
-                    <select id="country-select">
+                    <select id="country-select" onchange="this.blur();">
                         <option value="all">【不限國家】</option>
-                        <!-- 選項將由 JavaScript 動態生成 -->
                     </select>
                 </div>
             </div>
@@ -379,7 +393,12 @@
         <!-- 右側：動態清單 -->
         <div class="right-panel">
             <h2>📜 專屬博物館清單</h2>
-            <button class="btn-reset" id="btn-reset">解除地圖鎖定，顯示所有結果</button>
+            
+            <div class="action-buttons">
+                <button class="btn-magic" onclick="magicDoor(); this.blur();">✨ 魔法任意門</button>
+                <button class="btn-reset" id="btn-reset" onclick="resetMap(); this.blur();">🔙 顯示全部</button>
+            </div>
+
             <div class="filter-status" id="filter-status">載入中...</div>
             <ul class="museum-list" id="museum-list-container">
                 <!-- 清單將由 JS 動態生成 -->
@@ -388,7 +407,7 @@
     </div>
 
     <script>
-        // --- 50 間兒童專屬/友善博物館資料庫 (加入分類屬性) ---
+        // --- 50 間兒童專屬/友善博物館資料庫 ---
         const museumData = [
             // 藝術與美感啟蒙 (15間)
             { cat: "藝術與美感啟蒙", n: "The Met Kids 大都會藝術博物館", co: "美國", ci: "紐約", u: "https://www.metmuseum.org/art/online-features/metkids/", f: "極推！手繪互動地圖與時光機文物尋寶" },
@@ -427,22 +446,22 @@
             // 歷史、人文與傳統文化 (10間)
             { cat: "歷史、人文與傳統文化", n: "國立故宮博物院 兒童學藝中心", co: "台灣", ci: "台北", u: "https://theme.npm.edu.tw/children/", f: "東方藝術、青銅器與漢字字體闖關探索" },
             { cat: "歷史、人文與傳統文化", n: "トーハクキッズ 東京國立博物館", co: "日本", ci: "東京", u: "https://www.tnm.jp/modules/r_free_page/index.php?id=131", f: "以友善的平假名與插畫介紹日本傳統文物" },
-            { cat: "歷史、人文與傳統文化", n: "British Museum: Museum of the World", co: "英國", ci: "倫敦", u: "https://britishmuseum.withgoogle.com/", f: "極度震撼且直覺的 3D 互動歷史時間軸" },
+            { cat: "歷史、人文與傳統文化", n: "British Museum", co: "英國", ci: "倫敦", u: "https://britishmuseum.withgoogle.com/", f: "極度震撼且直覺的 3D 互動歷史時間軸" },
             { cat: "歷史、人文與傳統文化", n: "National Museum of Australia Kids", co: "澳洲", ci: "坎培拉", u: "https://www.nma.gov.au/learn/kids", f: "認識南半球歷史、原住民文化與趣味遊戲" },
             { cat: "歷史、人文與傳統文化", n: "Te Papa Kids 紐西蘭國家博物館", co: "紐西蘭", ci: "威靈頓", u: "https://www.tepapa.govt.nz/learn/for-kids", f: "深入淺出認識毛利文化與紐西蘭特有生物" },
             { cat: "歷史、人文與傳統文化", n: "ROM at Home 皇家安大略博物館", co: "加拿大", ci: "多倫多", u: "https://www.rom.on.ca/en/rom-at-home", f: "跨越世界文化與自然史的精美兒童學習包" },
             { cat: "歷史、人文與傳統文化", n: "Acropolis Museum Kids 衛城博物館", co: "希臘", ci: "雅典", u: "https://www.theacropolismuseum.gr/en/kids", f: "用可愛精緻插畫介紹古希臘神話與神廟" },
-            { cat: "歷史、人文與傳統文化", n: "NMAAHC Kids 非裔美國人歷史文化博物館", co: "美國", ci: "華盛頓特區", u: "https://nmaahc.si.edu/learn/early-childhood", f: "以兒童視角出發，傳遞平權歷史與文化包容" },
+            { cat: "歷史、人文與傳統文化", n: "NMAAHC Kids 非裔歷史文化博物館", co: "美國", ci: "華盛頓特區", u: "https://nmaahc.si.edu/learn/early-childhood", f: "以兒童視角出發，傳遞平權歷史與文化包容" },
             { cat: "歷史、人文與傳統文化", n: "MNA Kids 國立人類學博物館", co: "墨西哥", ci: "墨西哥城", u: "https://www.mna.inah.gob.mx/", f: "帶領兒童探索神秘的阿茲特克與馬雅古文明" },
             { cat: "歷史、人文與傳統文化", n: "NMAI 美國印第安人國家博物館", co: "美國", ci: "華盛頓特區", u: "https://americanindian.si.edu/nk360", f: "北美原住民傳說動畫與傳統工藝線上教學" },
 
             // 綜合與特殊主題 (10間)
-            { cat: "綜合與特殊主題", n: "The Children's Museum of Indianapolis", co: "美國", ci: "印第安納波利斯", u: "https://www.childrensmuseum.org/museum-at-home", f: "全球最大兒童博物館線上體驗與居家勞作" },
-            { cat: "綜合與特殊主題", n: "Boston Children's Museum 波士頓兒童博物館", co: "美國", ci: "波士頓", u: "https://bostonchildrensmuseum.org/play-learn/", f: "注重孩童感覺統合、生活技能與日常科學" },
+            { cat: "綜合與特殊主題", n: "Children's Museum of Indianapolis", co: "美國", ci: "印第安納波利斯", u: "https://www.childrensmuseum.org/museum-at-home", f: "全球最大兒童博物館線上體驗與居家勞作" },
+            { cat: "綜合與特殊主題", n: "Boston Children's Museum", co: "美國", ci: "波士頓", u: "https://bostonchildrensmuseum.org/play-learn/", f: "注重孩童感覺統合、生活技能與日常科學" },
             { cat: "綜合與特殊主題", n: "Roald Dahl Museum Join In", co: "英國", ci: "大米森登", u: "https://www.roalddahlmuseum.org/join-in/", f: "結合《巧克力冒險工廠》的文學想像力網站" },
             { cat: "綜合與特殊主題", n: "MoMath 國家數學博物館", co: "美國", ci: "紐約", u: "https://momath.org/", f: "顛覆傳統！提供各種線上趣味數學與邏輯遊戲" },
             { cat: "綜合與特殊主題", n: "SPYSCAPE 間諜博物館", co: "美國", ci: "紐約", u: "https://spyscape.com/", f: "適合大孩子的解謎任務與密碼學挑戰遊戲" },
-            { cat: "綜合與特殊主題", n: "National Museum of Play 斯特朗遊戲博物館", co: "美國", ci: "羅徹斯特", u: "https://www.museumofplay.org/", f: "以「玩樂」歷史為主題，提供各年代線上玩具圖鑑" },
+            { cat: "綜合與特殊主題", n: "National Museum of Play 斯特朗遊戲", co: "美國", ci: "羅徹斯特", u: "https://www.museumofplay.org/", f: "以「玩樂」歷史為主題，提供各年代線上玩具圖鑑" },
             { cat: "綜合與特殊主題", n: "CMA 兒童藝術博物館", co: "美國", ci: "紐約", u: "https://cmany.org/", f: "鼓勵孩子利用環保廢棄物進行創意藝術計畫" },
             { cat: "綜合與特殊主題", n: "Discover Children's Story Centre", co: "英國", ci: "倫敦", u: "https://discover.org.uk/", f: "專注於啟發說故事能力與角色扮演的線上資源" },
             { cat: "綜合與特殊主題", n: "Eureka! 尤里卡國家兒童博物館", co: "英國", ci: "哈利法克斯", u: "https://www.eureka.org.uk/", f: "生動活潑的人體構造與生活科學兒童資源" },
@@ -469,8 +488,12 @@
         const listContainer = document.getElementById('museum-list-container');
         const filterStatus = document.getElementById('filter-status');
         const btnReset = document.getElementById('btn-reset');
+        const passportStatus = document.getElementById('passport-status');
         
         let mapSelectedCity = null; 
+        
+        // 讀取本地護照印章紀錄
+        let visitedMuseums = JSON.parse(localStorage.getItem('visitedMuseums')) || [];
 
         // 初始化：繪製地圖魔法圓點
         for (const [city, coords] of Object.entries(cityCoords)) {
@@ -480,11 +503,54 @@
             circle.setAttribute("class", "map-dot");
             circle.setAttribute("id", `dot-${city}`);
             circle.setAttribute("data-city", city);
-            circle.addEventListener('click', () => handleMapClick(city));
+            circle.addEventListener('click', function() { handleMapClick(city); this.blur(); });
             svgPoints.appendChild(circle);
         }
 
-        // --- 核心邏輯 ---
+        // --- 功能 1: 更新護照印章 ---
+        function updatePassport() {
+            passportStatus.textContent = `🏅 收集印章：${visitedMuseums.length} / 50`;
+        }
+
+        // 當孩子點擊連結時記錄印章
+        window.markVisited = function(museumName) {
+            if (!visitedMuseums.includes(museumName)) {
+                visitedMuseums.push(museumName);
+                localStorage.setItem('visitedMuseums', JSON.stringify(visitedMuseums));
+                updatePassport();
+                renderUI(); // 重新渲染以顯示印章
+            }
+        };
+
+        // --- 功能 2: 魔法任意門 (隨機選擇) ---
+        function magicDoor() {
+            const randomIndex = Math.floor(Math.random() * museumData.length);
+            const randomMuseum = museumData[randomIndex];
+            
+            // 重置下拉選單
+            categorySelect.value = "all";
+            updateCountryDropdown("all");
+            countrySelect.value = "all";
+            
+            // 鎖定隨機抽到的城市
+            mapSelectedCity = randomMuseum.ci;
+            renderUI();
+            
+            // 讓右側清單捲動到最上方
+            document.querySelector('.right-panel').scrollTop = 0;
+        }
+
+        // --- 功能 4: 日夜模式切換 ---
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('theme-btn');
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                btn.textContent = '🌙';
+            } else {
+                btn.textContent = '🌞';
+            }
+        }
 
         // 更新第二層「國家」下拉選單
         function updateCountryDropdown(category) {
@@ -493,7 +559,6 @@
             if (category !== 'all') {
                 filteredData = museumData.filter(m => m.cat === category);
             }
-            
             const countries = [...new Set(filteredData.map(m => m.co))].sort();
             countries.forEach(c => {
                 countrySelect.innerHTML += `<option value="${c}">${c}</option>`;
@@ -527,12 +592,22 @@
                 results.forEach(m => {
                     const li = document.createElement('li');
                     li.className = 'museum-item';
+                    
+                    // 檢查是否已造訪，加入 visited class
+                    if (visitedMuseums.includes(m.n)) {
+                        li.classList.add('visited');
+                    }
+                    
+                    // 護照印章圖片 (使用可愛的 Emoji 當印章)
+                    const stampHtml = `<div class="stamp-badge"><span style="font-size: 40px;">💮</span></div>`;
+
                     li.innerHTML = `
+                        ${stampHtml}
                         <div class="cat-tag">${m.cat}</div>
                         <h3>${m.n}</h3>
                         <p>📍 ${m.co}, ${m.ci}</p>
                         <div class="feature-tag">💡 特色：${m.f}</div>
-                        <a href="${m.u}" target="_blank" class="museum-link">🚀 進入專屬網站</a>
+                        <a href="${m.u}" target="_blank" class="museum-link" onclick="markVisited('${m.n}'); this.blur();">🚀 進入專屬網站</a>
                     `;
                     listContainer.appendChild(li);
                 });
@@ -582,11 +657,13 @@
             renderUI();
         }
 
-        btnReset.addEventListener('click', () => {
+        function resetMap() {
             mapSelectedCity = null;
             renderUI();
-        });
+        }
 
+        // 初始載入
+        updatePassport();
         updateCountryDropdown('all');
         renderUI();
 

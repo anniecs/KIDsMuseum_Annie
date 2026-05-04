@@ -22,7 +22,6 @@
             --btn-blue-hover: #a1b6c7;
         }
 
-        /* 黑夜星空模式變數 */
         body.dark-mode {
             --bg-gradient: linear-gradient(180deg, #16213e 0%, #0f3460 100%);
             --text-main: #eaddce;
@@ -53,142 +52,73 @@
             transition: background 0.5s ease, color 0.5s ease;
         }
 
-        /* 移除行動裝置點擊高光，防止殘留框線 */
         button, a, select, .map-dot, .theme-toggle {
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
 
         /* =========================================
-           頂部控制列 (護照進度與日夜切換)
+           頂部控制列
            ========================================= */
         .top-bar {
-            width: 100%;
-            max-width: 1350px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            width: 100%; max-width: 1350px; display: flex;
+            justify-content: space-between; align-items: center; margin-bottom: 10px;
         }
 
         .passport-status {
-            background: var(--panel-bg);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            color: var(--title-color);
-            border: 2px dashed var(--border-color);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: all 0.3s;
+            background: var(--panel-bg); padding: 8px 15px; border-radius: 20px;
+            font-weight: bold; color: var(--title-color); border: 2px dashed var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.3s;
         }
 
         .theme-toggle {
-            background: var(--panel-bg);
-            border: 2px solid var(--border-color);
-            font-size: 1.5em;
-            padding: 5px 12px;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background: var(--panel-bg); border: 2px solid var(--border-color); font-size: 1.5em;
+            padding: 5px 12px; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         .theme-toggle:hover { transform: scale(1.1); }
 
-        /* 標題設計 */
         h1 {
-            color: var(--title-color);
-            font-size: 2.5em;
-            text-shadow: 2px 2px 0px rgba(255,255,255,0.3);
-            margin-top: 0;
-            margin-bottom: 5px;
-            letter-spacing: 2px;
-            text-align: center;
-            transition: color 0.3s;
+            color: var(--title-color); font-size: 2.5em; text-shadow: 2px 2px 0px rgba(255,255,255,0.3);
+            margin-top: 0; margin-bottom: 5px; letter-spacing: 2px; text-align: center; transition: color 0.3s;
         }
-
-        p.subtitle {
-            color: var(--text-sub);
-            font-size: 1.1em;
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-align: center;
-        }
+        p.subtitle { color: var(--text-sub); font-size: 1.1em; margin-top: 0; margin-bottom: 20px; font-weight: bold; text-align: center; }
 
         /* =========================================
            主內容佈局
            ========================================= */
-        .main-container {
-            display: flex;
-            gap: 20px;
-            width: 100%;
-            max-width: 1350px;
-            align-items: flex-start;
-        }
-
-        /* 左側區域 (篩選器與地圖) */
-        .left-panel {
-            flex: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
+        .main-container { display: flex; gap: 20px; width: 100%; max-width: 1350px; align-items: flex-start; }
+        .left-panel { flex: 2; display: flex; flex-direction: column; align-items: center; width: 100%; }
 
         .search-container {
-            background-color: var(--panel-bg);
-            padding: 15px 25px;
-            border-radius: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border: 4px dashed var(--border-color);
-            margin-bottom: 20px;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-            box-sizing: border-box;
-            transition: all 0.3s;
+            background-color: var(--panel-bg); padding: 15px 25px; border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 4px dashed var(--border-color);
+            margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+            width: 100%; box-sizing: border-box; transition: all 0.3s;
         }
 
-        .search-group {
-            display: flex; flex-direction: column; gap: 8px; align-items: center;
-        }
-
-        label {
-            font-size: 0.95em; color: var(--title-color); font-weight: bold;
-            background: var(--item-bg); padding: 2px 10px; border-radius: 10px;
-        }
-
+        .search-group { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+        label { font-size: 0.95em; color: var(--title-color); font-weight: bold; background: var(--item-bg); padding: 2px 10px; border-radius: 10px; }
         select {
-            padding: 10px 15px; border: 3px solid var(--border-color);
-            border-radius: 20px; background-color: var(--item-bg);
-            color: var(--text-main); font-size: 1em; font-weight: bold;
-            font-family: inherit; cursor: pointer; transition: all 0.3s;
-            text-align: center; min-width: 200px; appearance: none;
+            padding: 10px 15px; border: 3px solid var(--border-color); border-radius: 20px;
+            background-color: var(--item-bg); color: var(--text-main); font-size: 1em; font-weight: bold;
+            font-family: inherit; cursor: pointer; transition: all 0.3s; text-align: center; min-width: 200px; appearance: none;
         }
 
         /* =========================================
            地圖容器與魔法圓點
            ========================================= */
         .map-wrapper {
-            position: relative;
-            width: 100%;
-            background-color: var(--map-bg);
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            border: 5px solid var(--item-bg);
-            overflow: hidden;
-            transition: background-color 0.5s;
-            line-height: 0;
+            position: relative; width: 100%; background-color: var(--map-bg); border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 5px solid var(--item-bg); overflow: hidden;
+            transition: background-color 0.5s; line-height: 0; 
         }
 
         body.dark-mode .map-wrapper::after {
             content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
                               radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px);
-            background-size: 100px 100px, 60px 60px;
-            background-position: 0 0, 20px 20px;
+            background-size: 100px 100px, 60px 60px; background-position: 0 0, 20px 20px;
             opacity: 0.3; pointer-events: none;
         }
 
@@ -197,16 +127,10 @@
 
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 
-        /* 呼吸發光圓點 */
         .map-dot {
-            fill: rgba(235, 185, 95, 0.85);
-            stroke: rgba(200, 115, 101, 0.9);
-            cursor: pointer;
-            pointer-events: auto;
-            transform-origin: center;
-            animation: breathe 2s infinite alternate;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            display: none; 
+            fill: rgba(235, 185, 95, 0.85); stroke: rgba(200, 115, 101, 0.9);
+            cursor: pointer; pointer-events: auto; transform-origin: center;
+            animation: breathe 2s infinite alternate; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); display: none; 
         }
 
         body.dark-mode .map-dot { fill: #ffeb3b; stroke: #fff; filter: drop-shadow(0 0 8px #ffeb3b); }
@@ -226,13 +150,9 @@
            右側區域 (博物館清單與按鈕)
            ========================================= */
         .right-panel {
-            flex: 1;
-            background-color: var(--panel-bg);
-            padding: 25px; border-radius: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            border: 4px dashed var(--border-color);
-            min-height: 500px; max-height: 750px;
-            overflow-y: auto; position: sticky; top: 20px;
+            flex: 1; background-color: var(--panel-bg); padding: 25px; border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 4px dashed var(--border-color);
+            min-height: 500px; max-height: 750px; overflow-y: auto; position: sticky; top: 20px;
             min-width: 350px; transition: all 0.3s;
         }
 
@@ -242,70 +162,47 @@
         }
 
         .filter-status {
-            font-size: 1em; color: var(--text-sub); text-align: center;
-            margin-bottom: 15px; background: var(--tag-bg); padding: 10px;
-            border-radius: 15px; font-weight: bold;
+            font-size: 1em; color: var(--text-sub); text-align: center; margin-bottom: 15px;
+            background: var(--tag-bg); padding: 10px; border-radius: 15px; font-weight: bold;
         }
 
-        /* 動作按鈕 */
         .action-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
         
         .btn-magic, .btn-reset {
-            flex: 1; color: white; border: none; padding: 10px 10px;
-            border-radius: 15px; cursor: pointer; font-weight: bold;
-            transition: 0.2s; font-size: 1em;
+            flex: 1; color: white; border: none; padding: 10px 10px; border-radius: 15px;
+            cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 1em;
         }
         .btn-magic { background: #e5b25d; box-shadow: 0 3px 0 #c79a4e; }
         .btn-magic:hover { transform: translateY(2px); box-shadow: 0 1px 0 #c79a4e; }
-        
         .btn-reset { background: #d4a390; box-shadow: 0 3px 0 #b58876; display: none; }
         .btn-reset:hover { transform: translateY(2px); box-shadow: 0 1px 0 #b58876; }
 
         /* 博物館列表樣式 */
         .museum-list { list-style: none; padding: 0; margin: 0; }
-
         .museum-item {
-            margin-bottom: 20px; background: var(--item-bg); padding: 15px;
-            border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-left: 6px solid var(--title-color); animation: fadeIn 0.4s ease-in;
-            position: relative;
+            margin-bottom: 20px; background: var(--item-bg); padding: 15px; border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 6px solid var(--title-color);
+            animation: fadeIn 0.4s ease-in; position: relative;
         }
-        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 護照印章特效 */
         .stamp-badge {
-            position: absolute; right: 10px; top: 10px;
-            width: 45px; height: 45px; opacity: 0.8;
+            position: absolute; right: 10px; top: 10px; width: 45px; height: 45px; opacity: 0.8;
             transform: rotate(-15deg); display: none; pointer-events: none;
         }
         .museum-item.visited .stamp-badge { display: block; animation: stampPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         @keyframes stampPop { 0% { transform: scale(2) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(-15deg); opacity: 0.8; } }
 
-        .cat-tag {
-            display: inline-block; background: #e3ccaa; color: #5c4d4a;
-            padding: 3px 8px; border-radius: 10px; font-size: 0.75em;
-            font-weight: bold; margin-bottom: 8px;
-        }
-
+        .cat-tag { display: inline-block; background: #e3ccaa; color: #5c4d4a; padding: 3px 8px; border-radius: 10px; font-size: 0.75em; font-weight: bold; margin-bottom: 8px; }
         .museum-item h3 { margin: 0 0 8px 0; color: var(--text-main); font-size: 1.15em; padding-right: 40px; }
         .museum-item p { margin: 0 0 8px 0; color: var(--text-sub); font-size: 0.9em; line-height: 1.4; }
-        .feature-tag {
-            display: inline-block; background: var(--tag-bg); color: var(--title-color);
-            padding: 5px 10px; border-radius: 12px; font-size: 0.85em;
-            font-weight: bold; margin-bottom: 12px;
-        }
+        .feature-tag { display: inline-block; background: var(--tag-bg); color: var(--title-color); padding: 5px 10px; border-radius: 12px; font-size: 0.85em; font-weight: bold; margin-bottom: 12px; }
 
         .museum-link {
-            text-decoration: none; color: #fff; background-color: var(--btn-blue);
-            font-weight: bold; font-size: 0.95em; display: block;
-            padding: 10px 15px; border-radius: 20px; text-align: center;
-            transition: all 0.2s; box-shadow: 0 4px 0px rgba(0,0,0,0.15);
+            text-decoration: none; color: #fff; background-color: var(--btn-blue); font-weight: bold; font-size: 0.95em;
+            display: block; padding: 10px 15px; border-radius: 20px; text-align: center; transition: all 0.2s; box-shadow: 0 4px 0px rgba(0,0,0,0.15);
         }
-        .museum-link:hover {
-            background-color: var(--btn-blue-hover); transform: translateY(2px);
-            box-shadow: 0 2px 0px rgba(0,0,0,0.15); color: #fff;
-        }
+        .museum-link:hover { background-color: var(--btn-blue-hover); transform: translateY(2px); box-shadow: 0 2px 0px rgba(0,0,0,0.15); color: #fff; }
 
         .empty-state { text-align: center; color: var(--border-color); margin-top: 50px; font-size: 4em; }
         .empty-state p { font-size: 0.25em; color: var(--text-sub); margin-top: 10px; }
@@ -436,45 +333,45 @@
         ];
 
         // =========================================
-        // 2. 最終版邊框地圖：精準校正座標
+        // 2. ★ 絕對精準版座標 ★ (依據最終帶有星星邊框的地圖)
         // =========================================
         const cityCoords = {
-            // 亞洲與大洋洲
-            "台北": {l: 83.8, t: 54.5},
-            "東京": {l: 87.2, t: 44.0},
-            "新加坡": {l: 79.5, t: 63.0},
-            "雪梨": {l: 89.2, t: 81.0},
-            "墨爾本": {l: 87.5, t: 83.5},
-            "坎培拉": {l: 88.5, t: 82.0},
-            "威靈頓": {l: 94.2, t: 84.5},
+            // 亞洲與大洋洲 (全面向左上方修正，扣除邊界干擾)
+            "台北": {l: 78.5, t: 47.0},   // 精準鎖定紅色小島
+            "東京": {l: 83.5, t: 37.5},   // 精準鎖定綠色長型島嶼
+            "新加坡": {l: 73.0, t: 54.5}, // 精準鎖定馬來半島尾端
+            "雪梨": {l: 84.5, t: 75.5},   // 澳洲東南部
+            "墨爾本": {l: 82.5, t: 78.0}, // 澳洲南部
+            "坎培拉": {l: 83.5, t: 76.5}, // 澳洲東南內陸
+            "威靈頓": {l: 90.0, t: 79.0}, // 紐西蘭北島下緣
 
-            // 歐洲
-            "倫敦": {l: 48.0, t: 33.5},
-            "大米森登": {l: 47.8, t: 33.2},
-            "哈利法克斯": {l: 47.5, t: 32.0},
-            "巴黎": {l: 49.5, t: 37.0},
-            "阿姆斯特丹": {l: 50.5, t: 34.0},
-            "馬德里": {l: 47.5, t: 41.5},
-            "佛羅倫斯": {l: 53.0, t: 39.5},
-            "雅典": {l: 56.0, t: 42.5},
+            // 歐洲 (全面向左上方修正)
+            "倫敦": {l: 44.5, t: 29.0},     // 英國島嶼南部
+            "大米森登": {l: 44.2, t: 28.8}, // 英國
+            "哈利法克斯": {l: 44.0, t: 28.0}, // 英國中部
+            "巴黎": {l: 45.5, t: 31.5},     // 法國
+            "阿姆斯特丹": {l: 46.0, t: 29.5}, // 荷蘭
+            "馬德里": {l: 43.0, t: 36.5},     // 西班牙
+            "佛羅倫斯": {l: 48.5, t: 34.5},   // 義大利靴子
+            "雅典": {l: 51.5, t: 38.5},       // 希臘
 
-            // 北美洲 (美國東岸與中部)
-            "紐約": {l: 29.5, t: 39.0},
-            "華盛頓特區": {l: 29.0, t: 40.0},
-            "費城": {l: 29.2, t: 39.5},
-            "波士頓": {l: 30.2, t: 38.0},
-            "羅徹斯特": {l: 28.5, t: 38.5},
-            "邁阿密": {l: 27.8, t: 46.5},
-            "芝加哥": {l: 25.5, t: 39.0},
-            "印第安納波利斯": {l: 26.0, t: 40.0},
-            "多倫多": {l: 27.5, t: 37.5},
+            // 北美洲 - 美國東岸與中部 (全面向左上方修正)
+            "紐約": {l: 25.5, t: 33.5},
+            "華盛頓特區": {l: 25.0, t: 34.5},
+            "費城": {l: 25.2, t: 34.0},
+            "波士頓": {l: 26.0, t: 32.5},
+            "羅徹斯特": {l: 24.5, t: 32.5},
+            "邁阿密": {l: 23.5, t: 41.5},
+            "芝加哥": {l: 22.0, t: 33.5},
+            "印第安納波利斯": {l: 22.5, t: 34.5},
+            "多倫多": {l: 23.5, t: 32.0},
 
-            // 北美洲 (美國西岸與墨西哥)
-            "洛杉磯": {l: 16.0, t: 42.5},
-            "舊金山": {l: 15.0, t: 40.5},
-            "聖地牙哥": {l: 16.5, t: 43.5},
-            "蒙特瑞": {l: 15.5, t: 41.5},
-            "墨西哥城": {l: 20.5, t: 51.5}
+            // 北美洲 - 美國西岸與墨西哥 (全面向左上方修正)
+            "洛杉磯": {l: 13.5, t: 38.5},
+            "舊金山": {l: 12.5, t: 36.5},
+            "聖地牙哥": {l: 14.0, t: 39.5},
+            "蒙特瑞": {l: 13.0, t: 37.5},
+            "墨西哥城": {l: 17.5, t: 46.5}
         };
 
         // =========================================
@@ -490,10 +387,8 @@
         
         let mapSelectedCity = null; 
         
-        // 讀取本地護照印章紀錄 (LocalStorage)
         let visitedMuseums = JSON.parse(localStorage.getItem('visitedMuseums')) || [];
 
-        // 初始化：繪製地圖魔法圓點
         for (const [city, coords] of Object.entries(cityCoords)) {
             const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circle.setAttribute("cx", coords.l + "%");
@@ -505,22 +400,19 @@
             svgPoints.appendChild(circle);
         }
 
-        // --- 功能 1: 更新護照印章 ---
         function updatePassport() {
             passportStatus.textContent = `🏅 收集印章：${visitedMuseums.length} / 50`;
         }
 
-        // 當孩子點擊連結時記錄印章
         window.markVisited = function(museumName) {
             if (!visitedMuseums.includes(museumName)) {
                 visitedMuseums.push(museumName);
                 localStorage.setItem('visitedMuseums', JSON.stringify(visitedMuseums));
                 updatePassport();
-                renderUI(); // 重新渲染以顯示最新印章
+                renderUI(); 
             }
         };
 
-        // --- 功能 2: 魔法任意門 (隨機選擇) ---
         function magicDoor() {
             const randomIndex = Math.floor(Math.random() * museumData.length);
             const randomMuseum = museumData[randomIndex];
@@ -535,7 +427,6 @@
             document.querySelector('.right-panel').scrollTop = 0;
         }
 
-        // --- 功能 3: 日夜模式切換 ---
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('theme-btn');
@@ -547,7 +438,6 @@
             }
         }
 
-        // 更新第二層「國家」下拉選單
         function updateCountryDropdown(category) {
             countrySelect.innerHTML = '<option value="all">【不限國家】</option>';
             let filteredData = museumData;
@@ -560,7 +450,6 @@
             });
         }
 
-        // 渲染畫面與清單
         function renderUI() {
             const currentCat = categorySelect.value;
             const currentCountry = countrySelect.value;
@@ -634,7 +523,6 @@
             });
         }
 
-        // 事件監聽器
         categorySelect.addEventListener('change', function() {
             mapSelectedCity = null; 
             updateCountryDropdown(this.value);
@@ -656,7 +544,6 @@
             renderUI();
         }
 
-        // 啟動初始化
         updatePassport();
         updateCountryDropdown('all');
         renderUI();

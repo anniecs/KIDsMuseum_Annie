@@ -17,7 +17,7 @@
             --border-color: #d9c5b2;
             --item-bg: #fff;
             --tag-bg: #f4e8e1;
-            --map-bg: #fdfaf5; /* 配合地圖邊框底色 */
+            --map-bg: #fdfaf5; 
             --btn-blue: #8ba3b5;
             --btn-blue-hover: #a1b6c7;
         }
@@ -337,23 +337,23 @@
         // =========================================
         const cityCoords = {
             // 亞洲與大洋洲
-            "台北": {l: 78.5, t: 48.5},     // 台灣紅色小島
-            "東京": {l: 83.5, t: 39.5},     // 日本綠色島嶼
-            "新加坡": {l: 74.5, t: 57.0},   // 馬來半島尾端
-            "雪梨": {l: 83.0, t: 76.0},     // 澳洲東南部
-            "墨爾本": {l: 81.0, t: 78.0},   // 澳洲南部
-            "坎培拉": {l: 82.5, t: 76.5},   // 澳洲東南內陸
-            "威靈頓": {l: 89.5, t: 80.0},   // 紐西蘭北島下緣
+            "台北": {l: 78.5, t: 48.5},     
+            "東京": {l: 83.5, t: 39.5},     
+            "新加坡": {l: 74.5, t: 57.0},   
+            "雪梨": {l: 83.0, t: 76.0},     
+            "墨爾本": {l: 81.0, t: 78.0},   
+            "坎培拉": {l: 82.5, t: 76.5},   
+            "威靈頓": {l: 89.5, t: 80.0},   
 
             // 歐洲
-            "倫敦": {l: 47.5, t: 30.5},       // 英國島嶼南部
-            "大米森登": {l: 47.2, t: 30.2},   // 英國
-            "哈利法克斯": {l: 47.0, t: 29.5}, // 英國中部
-            "巴黎": {l: 48.5, t: 33.5},       // 法國
-            "阿姆斯特丹": {l: 49.0, t: 31.0}, // 荷蘭
-            "馬德里": {l: 46.0, t: 37.5},     // 西班牙
-            "佛羅倫斯": {l: 51.5, t: 36.5},   // 義大利
-            "雅典": {l: 54.0, t: 40.5},       // 希臘
+            "倫敦": {l: 47.5, t: 30.5},       
+            "大米森登": {l: 47.2, t: 30.2},   
+            "哈利法克斯": {l: 47.0, t: 29.5}, 
+            "巴黎": {l: 48.5, t: 33.5},       
+            "阿姆斯特丹": {l: 49.0, t: 31.0}, 
+            "馬德里": {l: 46.0, t: 37.5},     
+            "佛羅倫斯": {l: 51.5, t: 36.5},   
+            "雅典": {l: 54.0, t: 40.5},       
 
             // 北美洲 (美國東岸與中部)
             "紐約": {l: 28.5, t: 37.5},
@@ -389,10 +389,11 @@
         
         let visitedMuseums = JSON.parse(localStorage.getItem('visitedMuseums')) || [];
 
+        // 修正手機版 SVG 顯示問題：拔除 % 符號，直接設定相對座標數值
         for (const [city, coords] of Object.entries(cityCoords)) {
             const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            circle.setAttribute("cx", coords.l + "%");
-            circle.setAttribute("cy", coords.t + "%");
+            circle.setAttribute("cx", coords.l);
+            circle.setAttribute("cy", coords.t);
             circle.setAttribute("class", "map-dot");
             circle.setAttribute("id", `dot-${city}`);
             circle.setAttribute("data-city", city);

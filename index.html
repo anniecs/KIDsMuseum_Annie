@@ -333,7 +333,7 @@
         ];
 
         // =========================================
-        // 2. ★ 絕對精準版座標 ★ (根據最後一張截圖人工校正)
+        // 2. 座標資料
         // =========================================
         const cityCoords = {
             // 亞洲與大洋洲
@@ -355,7 +355,7 @@
             "佛羅倫斯": {l: 51.5, t: 36.5},   
             "雅典": {l: 54.0, t: 40.5},       
 
-            // 北美洲 (美國東岸與中部)
+            // 北美洲 
             "紐約": {l: 28.5, t: 37.5},
             "華盛頓特區": {l: 28.0, t: 38.5},
             "費城": {l: 28.2, t: 38.0},
@@ -366,7 +366,7 @@
             "印第安納波利斯": {l: 25.5, t: 39.0},
             "多倫多": {l: 26.5, t: 36.0},
 
-            // 北美洲 (美國西岸與墨西哥)
+            // 北美洲 (西岸)
             "洛杉磯": {l: 16.5, t: 41.5},
             "舊金山": {l: 15.5, t: 39.5},
             "聖地牙哥": {l: 17.0, t: 42.5},
@@ -389,11 +389,12 @@
         
         let visitedMuseums = JSON.parse(localStorage.getItem('visitedMuseums')) || [];
 
-        // 修正手機版 SVG 顯示問題：拔除 % 符號，直接設定相對座標數值
+        // 🌟 關鍵修復：加入明確的 r 屬性，拯救手機版！🌟
         for (const [city, coords] of Object.entries(cityCoords)) {
             const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circle.setAttribute("cx", coords.l);
             circle.setAttribute("cy", coords.t);
+            circle.setAttribute("r", "1.2"); // 強制加上明確半徑
             circle.setAttribute("class", "map-dot");
             circle.setAttribute("id", `dot-${city}`);
             circle.setAttribute("data-city", city);
@@ -511,7 +512,7 @@
             document.querySelectorAll('.map-dot').forEach(dot => {
                 const city = dot.getAttribute('data-city');
                 if (validCities.has(city)) {
-                    dot.style.display = 'block';
+                    dot.style.display = 'inline'; // 🌟 關鍵修復：從 block 改為 inline
                     if (city === mapSelectedCity) {
                         dot.classList.add('active');
                     } else {

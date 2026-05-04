@@ -1,0 +1,414 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨世界兒童博物館奇幻地圖✨</title>
+    <style>
+        /* 童話風整體背景 */
+        body {
+            font-family: 'Comic Sans MS', 'Nunito', 'Microsoft JhengHei', cursive, sans-serif;
+            background: linear-gradient(180deg, #ffe6fa 0%, #e6f9ff 100%);
+            color: #5c4a4d;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 移除行動裝置點擊的高光與預設 focus，避免殘留記憶 */
+        button, a, select, .map-dot {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        /* 標題設計 */
+        h1 {
+            color: #ff8fab;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 0px #fff, 4px 4px 0px #fce0e5;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        p.subtitle {
+            color: #8fa0b3;
+            font-size: 1.1em;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* 主內容佈局：左側地圖，右側清單 */
+        .main-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1350px;
+            align-items: flex-start;
+        }
+
+        /* 左側區域：地圖 */
+        .left-panel {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 右側區域：動態清單 */
+        .right-panel {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(255, 143, 171, 0.2);
+            border: 4px dashed #bde0fe;
+            min-height: 500px;
+            max-height: 750px;
+            overflow-y: auto;
+            position: sticky;
+            top: 20px;
+            min-width: 350px;
+        }
+
+        .right-panel h2 {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ffc2d1;
+            padding-bottom: 10px;
+        }
+
+        .filter-status {
+            font-size: 1em;
+            color: #8fa0b3;
+            text-align: center;
+            margin-bottom: 15px;
+            background: #fdf5f6;
+            padding: 10px;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        /* 地圖區域 */
+        .map-wrapper {
+            position: relative;
+            width: 100%;
+            background-color: #e6f9ff;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 5px solid #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .map-wrapper::before {
+            content: "🍄 請確認已將圖片存為 map.png 🍄";
+            position: absolute;
+            color: #ff99ac;
+            font-size: 1em;
+            font-weight: bold;
+            z-index: 0;
+        }
+
+        .base-map {
+            width: 100%;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* 會呼吸的魔法圓點 */
+        .map-dot {
+            fill: rgba(255, 209, 102, 0.85);
+            stroke: rgba(255, 107, 107, 0.9);
+            cursor: pointer;
+            pointer-events: auto;
+            transform-origin: center;
+            animation: breathe 2s infinite alternate;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes breathe {
+            0% { r: 1.0; stroke-width: 0.3; }
+            100% { r: 1.5; stroke-width: 0.5; filter: drop-shadow(0 0 3px rgba(255, 209, 102, 0.8)); }
+        }
+
+        .map-dot:hover, .map-dot.active {
+            fill: rgba(6, 214, 160, 0.95);
+            stroke: #fff;
+            r: 2.2;
+            stroke-width: 0.6;
+            animation: none;
+            filter: drop-shadow(0 0 5px rgba(6, 214, 160, 0.8));
+        }
+
+        /* 博物館列表樣式 */
+        .museum-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .museum-item {
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            border-left: 6px solid #ffb5a7;
+            animation: fadeIn 0.4s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .museum-item h3 {
+            margin: 0 0 8px 0;
+            color: #5c4a4d;
+            font-size: 1.2em;
+        }
+
+        .museum-item p {
+            margin: 0 0 8px 0;
+            color: #7a8b9e;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background: #fff0f3;
+            color: #ff6b6b;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        /* 按鈕樣式 */
+        .museum-link {
+            text-decoration: none;
+            color: #5c4a4d;
+            background-color: #84dcc6;
+            font-weight: bold;
+            font-size: 0.95em;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0px #5ebaa4;
+        }
+
+        .museum-link:hover {
+            background-color: #a5ffd6;
+            transform: translateY(2px);
+            box-shadow: 0 2px 0px #5ebaa4;
+        }
+
+        /* 初始提示插畫區塊 */
+        .empty-state {
+            text-align: center;
+            color: #bde0fe;
+            margin-top: 50px;
+            font-size: 4em;
+        }
+        .empty-state p {
+            font-size: 0.25em;
+            color: #8fa0b3;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .main-container { flex-direction: column; }
+            .right-panel { width: 100%; box-sizing: border-box; min-height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>✨ 世界兒童博物館奇幻地圖 ✨</h1>
+    <p class="subtitle">點擊地圖上的魔法圓點，發掘專屬孩子的藝術與科學殿堂！</p>
+
+    <div class="main-container">
+        <!-- 左側：地圖 -->
+        <div class="left-panel">
+            <div class="map-wrapper">
+                <img src="map.png" alt="世界地圖" class="base-map" id="map-image" onerror="this.style.display='none'">
+                <svg class="svg-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" id="svg-points"></svg>
+            </div>
+        </div>
+
+        <!-- 右側：動態清單 -->
+        <div class="right-panel">
+            <h2>📜 博物館資訊</h2>
+            <div class="filter-status" id="filter-status">請點擊地圖圓點 🌍</div>
+            <ul class="museum-list" id="museum-list-container">
+                <div class="empty-state">
+                    🏰
+                    <p>選擇一個城市開始探險吧！</p>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // --- 50 間兒童專屬/友善博物館資料庫 ---
+        const museumData = [
+            // 台灣本土精選
+            { n: "國立故宮博物院 兒童學藝中心", co: "台灣", ci: "台北", u: "https://theme.npm.edu.tw/children/", f: "東方藝術、青銅器與漢字字體闖關探索" },
+            { n: "臺北市立美術館 兒童藝術教育中心", co: "台灣", ci: "台北", u: "https://www.tfam.museum/kid/", f: "當代藝術啟蒙與豐富的手作互動工作坊" },
+            { n: "國立自然科學博物館 兒童數位博物館", co: "台灣", ci: "台中", u: "https://children.nmns.edu.tw/", f: "生動的昆蟲生命週期與生態圖解遊戲" },
+            { n: "國立臺灣史前文化博物館 兒童版", co: "台灣", ci: "台東", u: "https://www.nmp.gov.tw/kids/", f: "台灣考古遺址與南島原住民生動故事" },
+            { n: "朱銘美術館 兒童藝術中心", co: "台灣", ci: "新北", u: "https://www.juming.org.tw/kids/", f: "戶外大型雕塑與專屬兒童的藝術實驗室" },
+            
+            // 歐美藝術殿堂
+            { n: "The Met Kids 大都會藝術博物館", co: "美國", ci: "紐約", u: "https://www.metmuseum.org/art/online-features/metkids/", f: "極推！手繪互動地圖與時光機文物尋寶" },
+            { n: "Tate Kids 泰特美術館", co: "英國", ci: "倫敦", u: "https://www.tate.org.uk/kids", f: "普普風高彩度遊戲、線上繪圖與認識藝術大師" },
+            { n: "Le Petit Louvre 小羅浮宮", co: "法國", ci: "巴黎", u: "https://petitlouvre.louvre.fr/", f: "如浪漫童話般的動畫故事，輕鬆認識世界名畫" },
+            { n: "GettyGames 蓋蒂中心", co: "美國", ci: "洛杉磯", u: "https://www.getty.edu/gettygames/", f: "化身大偵探！名畫裡的細節尋寶與記憶配對遊戲" },
+            { n: "Van Gogh Museum for Children 梵谷博物館", co: "荷蘭", ci: "阿姆斯特丹", u: "https://www.vangoghmuseum.nl/en/art-and-stories/children", f: "繪本式的溫暖生平故事與可列印著色畫" },
+            { n: "NGV Kids 維多利亞國家美術館", co: "澳洲", ci: "墨爾本", u: "https://www.ngv.vic.gov.au/kids/", f: "極具設計感的線上幾何拼貼與居家手作資源" },
+            { n: "Rijksmuseum Kids 荷蘭國家博物館", co: "荷蘭", ci: "阿姆斯特丹", u: "https://www.rijksmuseum.nl/en/whats-on/children", f: "林布蘭名畫細節解謎與精彩的線上互動探索" },
+            { n: "NGAkids Art Zone 華盛頓國家藝廊", co: "美國", ci: "華盛頓特區", u: "https://www.nga.gov/education/kids.html", f: "提供豐富且強大的數位藝術畫布與創作工具" },
+            { n: "MoMA Destination Modern Art 現代藝術博物館", co: "美國", ci: "紐約", u: "https://www.moma.org/interactives/destination/", f: "帶領孩子搭乘虛擬太空船認識現代藝術作品" },
+            { n: "Gallery Kids 新加坡國家美術館", co: "新加坡", ci: "新加坡", u: "https://www.nationalgallery.sg/gallerykids", f: "針對亞洲兒童設計的美感互動體驗與線上學習" },
+            { n: "Guggenheim at Home 古根漢美術館", co: "美國", ci: "紐約", u: "https://www.guggenheim.org/at-large/guggenheim-at-home", f: "提供豐富的居家兒童藝術創作指南" },
+            { n: "LACMA Kids 洛杉磯郡藝術博物館", co: "美國", ci: "洛杉磯", u: "https://www.lacma.org/learn/kids-families", f: "適合全家同樂的藝術創作影音與線上活動" },
+            { n: "Art Institute of Chicago 芝加哥藝術博物館", co: "美國", ci: "芝加哥", u: "https://www.artic.edu/visit-us-virtually/family-room", f: "Family Room 線上藝術創作與互動繪本" },
+            { n: "Museo del Prado for Families 普拉多博物館", co: "西班牙", ci: "馬德里", u: "https://www.museodelprado.es/en/education/prado-for-families", f: "西班牙皇室名畫介紹影片與兒童專屬導覽素材" },
+            { n: "Uffizi Kids 烏菲茲美術館", co: "義大利", ci: "佛羅倫斯", u: "https://www.uffizi.it/en/pages/uffizi-kids", f: "提供尋寶圖讓孩子在文藝復興名畫中找尋動植物" },
+
+            // 自然、科學與生態
+            { n: "AMNH OLogy 自然史博物館", co: "美國", ci: "紐約", u: "https://www.amnh.org/explore/ology", f: "最經典的恐龍、宇宙與古生物科學探索網站" },
+            { n: "NHM Try This At Home 自然史博物館", co: "英國", ci: "倫敦", u: "https://www.nhm.ac.uk/take-part/try-this-at-home.html", f: "豐富的居家自然科學小手作與恐龍圖鑑知識" },
+            { n: "Science Museum Games 科學博物館", co: "英國", ci: "倫敦", u: "https://www.sciencemuseum.org.uk/games-and-apps", f: "挑戰基礎物理、認識材料與發明的趣味小遊戲" },
+            { n: "かはくのキッズページ 國立科學博物館", co: "日本", ci: "東京", u: "https://www.kahaku.go.jp/kids/", f: "充滿日系可愛插畫的動物、化石比較與圖解" },
+            { n: "Exploratorium 探索博物館", co: "美國", ci: "舊金山", u: "https://www.exploratorium.edu/explore", f: "強調動手做實驗、錯覺現象與光影科學原理" },
+            { n: "Smithsonian Kids 史密森尼學會", co: "美國", ci: "華盛頓特區", u: "https://www.si.edu/kids", f: "涵蓋自然、歷史、動物與宇宙的綜合兒童寶庫" },
+            { n: "Field Museum Kids 菲爾德自然史博物館", co: "美國", ci: "芝加哥", u: "https://www.fieldmuseum.org/at-home", f: "暴龍 SUE 的專屬故事與豐富的線上自然探索" },
+            { n: "Monterey Bay Aquarium for Kids 蒙特瑞灣水族館", co: "美國", ci: "蒙特瑞", u: "https://www.montereybayaquarium.org/for-kids", f: "友善的海洋生物遊戲與超療癒的可愛動物直播" },
+            { n: "Shedd Aquarium Sea Curious 謝德水族館", co: "美國", ci: "芝加哥", u: "https://www.sheddaquarium.org/care-and-conservation/sea-curious", f: "專為低年級設計的海洋知識與生態保育系列影音" },
+            { n: "San Diego Zoo Kids 聖地牙哥動物園", co: "美國", ci: "聖地牙哥", u: "https://kids.sandiegozoo.org/", f: "可愛的動物百科學習、保育故事與互動小遊戲" },
+            { n: "Australian Museum Kids 澳洲博物館", co: "澳洲", ci: "雪梨", u: "https://australian.museum/learn/kids/", f: "探索獨特澳洲野生動植物與古老生物化石" },
+            { n: "Museums Victoria Kids 維多利亞州博物館群", co: "澳洲", ci: "墨爾本", u: "https://museumsvictoria.com.au/learning/kids-activities/", f: "結合科學體驗與在地歷史的兒童互動學習資源" },
+            { n: "National Air and Space Museum 國家航空太空博物館", co: "美國", ci: "華盛頓特區", u: "https://airandspace.si.edu/anywhere", f: "Anywhere 計畫：宇宙探索與飛行器基礎知識" },
+            { n: "Franklin Institute @Home 富蘭克林科學博物館", co: "美國", ci: "費城", u: "https://www.fi.edu/franklin-at-home", f: "提供大量容易上手的居家科學小實驗教學影片" },
+            { n: "Frost Science@Home 霜凍科學博物館", co: "美國", ci: "邁阿密", u: "https://www.frostscience.org/at-home/", f: "適合低年級的科學勞作點子與豐富海洋知識" },
+
+            // 歷史、文化與綜合兒童博物館
+            { n: "トーハクキッズ 東京國立博物館", co: "日本", ci: "東京", u: "https://www.tnm.jp/modules/r_free_page/index.php?id=131", f: "以友善的平假名與插畫，介紹日本傳統文物與浮世繪" },
+            { n: "British Museum: Museum of the World 大英博物館", co: "英國", ci: "倫敦", u: "https://britishmuseum.withgoogle.com/", f: "極度震撼且直覺的 3D 互動歷史時間軸" },
+            { n: "National Museum of Australia Kids 澳洲國家博物館", co: "澳洲", ci: "坎培拉", u: "https://www.nma.gov.au/learn/kids", f: "認識南半球歷史、原住民文化與動物的趣味遊戲" },
+            { n: "Te Papa Kids 紐西蘭國家博物館", co: "紐西蘭", ci: "威靈頓", u: "https://www.tepapa.govt.nz/learn/for-kids", f: "深入淺出認識毛利文化與紐西蘭特有種生物" },
+            { n: "ROM at Home 皇家安大略博物館", co: "加拿大", ci: "多倫多", u: "https://www.rom.on.ca/en/rom-at-home", f: "提供跨越世界文化與自然史的精美兒童學習包" },
+            { n: "Acropolis Museum Kids 衛城博物館", co: "希臘", ci: "雅典", u: "https://www.theacropolismuseum.gr/en/kids", f: "用可愛精緻的插畫介紹古希臘神話與神廟建築" },
+            { n: "NMAAHC Kids 非裔美國人歷史文化博物館", co: "美國", ci: "華盛頓特區", u: "https://nmaahc.si.edu/learn/early-childhood", f: "以兒童視角出發，溫柔傳遞平權歷史與文化包容" },
+            { n: "MNA Kids 國立人類學博物館", co: "墨西哥", ci: "墨西哥城", u: "https://www.mna.inah.gob.mx/", f: "帶領兒童探索神秘的阿茲特克與馬雅古文明" },
+            { n: "NMAI 美國印第安人國家博物館", co: "美國", ci: "華盛頓特區", u: "https://americanindian.si.edu/nk360", f: "北美原住民傳說故事動畫與傳統工藝線上教學" },
+            { n: "The Children's Museum of Indianapolis 印第安納波利斯兒童博物館", co: "美國", ci: "印第安納波利斯", u: "https://www.childrensmuseum.org/museum-at-home", f: "全球最大兒童博物館的線上體驗與居家勞作" },
+            { n: "Boston Children's Museum 波士頓兒童博物館", co: "美國", ci: "波士頓", u: "https://bostonchildrensmuseum.org/play-learn/", f: "注重孩童感覺統合、生活技能與日常科學學習" },
+            { n: "Roald Dahl Museum Join In 羅德達爾博物館", co: "英國", ci: "大米森登", u: "https://www.roalddahlmuseum.org/join-in/", f: "結合《巧克力冒險工廠》等經典童話的想像力網站" },
+            { n: "MoMath 國家數學博物館", co: "美國", ci: "紐約", u: "https://momath.org/", f: "顛覆傳統！提供各種線上趣味數學拼圖與邏輯遊戲" },
+            { n: "SPYSCAPE 間諜博物館", co: "美國", ci: "紐約", u: "https://spyscape.com/", f: "適合大孩子的解謎任務與密碼學挑戰遊戲" },
+            { n: "National Museum of Play 斯特朗遊戲博物館", co: "美國", ci: "羅徹斯特", u: "https://www.museumofplay.org/", f: "以「玩樂」歷史為主題，提供各年代線上玩具圖鑑" },
+            { n: "CMA 兒童藝術博物館", co: "美國", ci: "紐約", u: "https://cmany.org/", f: "鼓勵孩子在家利用環保廢棄物進行創意藝術計畫" },
+            { n: "Discover Children's Story Centre 探索兒童故事中心", co: "英國", ci: "倫敦", u: "https://discover.org.uk/", f: "專注於啟發說故事能力與角色扮演的線上資源" },
+            { n: "Eureka! 尤里卡國家兒童博物館", co: "英國", ci: "哈利法克斯", u: "https://www.eureka.org.uk/", f: "生動活潑的人體構造與生活科學兒童數位資源" },
+            { n: "Young V&A (原 V&A 兒童博物館)", co: "英國", ci: "倫敦", u: "https://www.vam.ac.uk/young", f: "展示各個年代的玩具設計與兒童用品發展史" }
+        ];
+
+        // --- 城市地圖座標 (百分比定位) ---
+        const cityCoords = {
+            "台北": {l: 81.5, t: 44.5}, "台中": {l: 81.3, t: 45.0}, "台東": {l: 81.6, t: 45.5}, "新北": {l: 81.4, t: 44.2},
+            "紐約": {l: 30.5, t: 32.5}, "倫敦": {l: 46.5, t: 27.5}, "巴黎": {l: 48.0, t: 29.5}, "洛杉磯": {l: 17.5, t: 38.5},
+            "阿姆斯特丹": {l: 49.5, t: 26.5}, "墨爾本": {l: 88.5, t: 78.0}, "華盛頓特區": {l: 29.5, t: 34.5},
+            "新加坡": {l: 76.0, t: 58.0}, "芝加哥": {l: 23.5, t: 33.5}, "馬德里": {l: 45.5, t: 33.5},
+            "佛羅倫斯": {l: 50.5, t: 30.5}, "東京": {l: 84.5, t: 36.5}, "舊金山": {l: 16.0, t: 36.0},
+            "蒙特瑞": {l: 16.5, t: 37.0}, "聖地牙哥": {l: 18.5, t: 40.0}, "雪梨": {l: 92.0, t: 75.5},
+            "費城": {l: 30.0, t: 33.5}, "邁阿密": {l: 28.0, t: 42.0}, "坎培拉": {l: 91.0, t: 76.5},
+            "威靈頓": {l: 96.0, t: 78.5}, "多倫多": {l: 28.0, t: 31.5}, "雅典": {l: 53.0, t: 35.5},
+            "墨西哥城": {l: 22.0, t: 48.0}, "印第安納波利斯": {l: 25.0, t: 34.0}, "波士頓": {l: 31.0, t: 31.5},
+            "大米森登": {l: 46.2, t: 27.2}, "羅徹斯特": {l: 28.5, t: 31.0}, "哈利法克斯": {l: 45.5, t: 26.0}
+        };
+
+        const svgPoints = document.getElementById('svg-points');
+        const listContainer = document.getElementById('museum-list-container');
+        const filterStatus = document.getElementById('filter-status');
+        
+        let currentActiveCity = null;
+
+        // 初始化：在地圖上生成魔法圓點
+        for (const [city, coords] of Object.entries(cityCoords)) {
+            // 確保該城市在資料庫中有資料才繪製
+            if(museumData.some(m => m.ci === city)) {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", coords.l + "%");
+                circle.setAttribute("cy", coords.t + "%");
+                circle.setAttribute("class", "map-dot");
+                circle.setAttribute("id", `dot-${city}`);
+                circle.addEventListener('click', () => handleMapClick(city));
+                svgPoints.appendChild(circle);
+            }
+        }
+
+        // 點擊地圖圓點的處理邏輯
+        function handleMapClick(city) {
+            // 1. 更新圓點的視覺活躍狀態
+            if (currentActiveCity) {
+                const prevDot = document.getElementById(`dot-${currentActiveCity}`);
+                if(prevDot) prevDot.classList.remove('active');
+            }
+            const activeDot = document.getElementById(`dot-${city}`);
+            if(activeDot) activeDot.classList.add('active');
+            currentActiveCity = city;
+
+            // 2. 過濾該城市的博物館
+            const filteredMuseums = museumData.filter(m => m.ci === city);
+
+            // 3. 更新右側面板狀態文字
+            filterStatus.innerHTML = `📍 探索中：<b>${city}</b> (${filteredMuseums.length} 間)`;
+
+            // 4. 重新渲染右側清單
+            listContainer.innerHTML = '';
+            filteredMuseums.forEach(m => {
+                const li = document.createElement('li');
+                li.className = 'museum-item';
+                
+                const html = `
+                    <h3>${m.n}</h3>
+                    <p>📍 ${m.co}, ${m.ci}</p>
+                    <div class="feature-tag">💡 特色：${m.f}</div>
+                    <a href="${m.u}" target="_blank" class="museum-link">🚀 進入兒童專屬網站</a>
+                `;
+                li.innerHTML = html;
+                listContainer.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
